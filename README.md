@@ -9,3 +9,7 @@ The script specifies a few default values. These are all located at the top of t
 ## Book ID
 
 The ID of a book can be obtained by opening the book on the [klett website](https://www.klett.de/meinklett#/) as it is part of the url. The format is also specified in the python file.
+
+## Disclaimer
+
+This project is in no way iffiliated with Klett. To download anything, a username, a password and a valid book license are required.
