@@ -1,6 +1,7 @@
 import os
 import re
 import getpass
+import sys
 import tempfile
 import img2pdf
 import requests
@@ -48,18 +49,28 @@ def main(temp_dir_path: str = "tmp"):
     request.data = f"username={username}&password={password}&rememberMe=off&credentialId="
     request.cookies = response_login_page.cookies
     request.headers["Content-Type"] = "application/x-www-form-urlencoded"
-    response_success = session.send(session.send(request.prepare(), allow_redirects=False).next, allow_redirects=False)
+    login_response = session.send(request.prepare(), allow_redirects=False)
 
-    if response_success.status_code == 302:
+    if login_response.status_code == 200:
+        print("Wrong username or password.")
+        sys.exit(1)
+
+    login_response = session.send(login_response.next, allow_redirects=False)
+
+    if login_response.status_code == 302:
         print("Success.")
     else:
-        print("Failure.")
-        exit(1)
+        print("Unknown login error.")
+        sys.exit(1)
 
     book_id: str = DEFAULT_BOOK_ID
 
     if (s := input("Book ID (empty for default): ")) != "":
         book_id = s
+
+    if not session.get(f"https://bridge.klett.de/{book_id}/content/pages/page_0/Scale1.png").ok:
+        print("Incorrect book ID.")
+        sys.exit(1)
 
     print("Getting number of pages... ", end="", flush=True)
 
@@ -96,7 +107,7 @@ def main(temp_dir_path: str = "tmp"):
 
     if file_name == "":
         print("No file specified")
-        exit(1)
+        sys.exit(1)
 
     image_files = []
 
@@ -109,7 +120,7 @@ def main(temp_dir_path: str = "tmp"):
 
         if not response.ok:
             print(f"Could not get page {page_num}")
-            exit(1)
+            sys.exit(1)
 
         image_files.append(os.path.join(temp_dir_path, f"{page_num}.png"))
 
