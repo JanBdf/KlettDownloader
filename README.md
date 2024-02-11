@@ -12,4 +12,4 @@ The ID of a book can be obtained by opening the book on the [klett website](http
 
 ## Disclaimer
 
-This project is in no way iffiliated with Klett. To download anything, a username, a password and a valid book license are required.
+This project is in no way affiliated with Klett. To download anything, a username, a password and a valid book license are required.
